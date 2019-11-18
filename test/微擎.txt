@@ -1,0 +1,242 @@
+绝对地址：$_W['siteroot']  根目录的绝对地址 包括了http://
+
+绝对目录
+IA_ROOT	string	微擎程序安装目录	“E:/MicroEngine/pro”
+ATTACHMENT_ROOT	string	微擎程序附件目录	“E:/MicroEngine/pro/attachment”
+$_W['attachurl']    “http://www.we7.cc/attachment/"
+MODULE_ROOT	string	当前模块目录	“E:/MicroEngine/pro/addons/we7_store”
+MODULE_URL	string	当前模块 url	“http://www.we7.cc/addons/we7_store/”
+TIMESTAMP	int	获得当前系统时间, 格式为Unix时间戳, 相当于调用 time().
+这个时间戳定义于当前页面开始时,在同一个页面请求响应过程中不变.	
+CLIENT_IP	string	当前客户端 IP 地址	“255.255.255.255”
+
+
+-------------php当前url
+      var ishttps = 'https:' == document.location.protocol ? true: false;
+            if(ishttps){
+                var url="https://{$_SERVER['HTTP_HOST']}/app/index.php?i={$_W['uniacid']}&c=entry&m=ewei_shopv2&do=mobile&lat="+lat2+"&lng="+lng2;
+             }else{
+                 var url="http://{$_SERVER['HTTP_HOST']}/app/index.php?i={$_W['uniacid']}&c=entry&m=ewei_shopv2&do=mobile&lat="+lat2+"&lng="+lng2;
+               }
+
+$url='http://'.$_SERVER['HTTP_HOST']."/app/index.php?i={$_W['uniacid']}&c=entry&id={$_GPC['id']}&fee={$_GPC['fee']}&do=pay&m=jack_qsc";
+
+{php echo $_W['siteroot'].'addons/ss_zxkm/qrcode/'.$item['cardno'].'.png'}
+
+{php echo murl('ceshi2','',1,1);}   第二个参数的array，这个是最简单的函数，在全局函数里面，m是mobile，url，函数名也好记
+
+
+//获取完整的url
+echo 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+echo 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
+#http://localhost/blog/testurl.php?id=5
+	
+
+-----------------------------------消息跳转
+message('修改成功', referer(), 'success');
+message('编辑排序成功', $this->createWebUrl('display', array()), 'success');
+
+
+header("Location:".'http://'.$_SERVER['HTTP_HOST']."guanzhu.php?weid={$_W['uniacid']}");
+
+  js跳转
+window.location.href="http://www.baidu.com";  
+ 
+
+---------------------------------------------日志
+load()->func('logging');
+logging_run('进入设备添加');
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+//关注判断
+ if (!empty($_W['fans']['follow'])){ echo '已关注'; } else { echo '未关注'; }
+
+-----------------------------------------------推广二维码
+关注链接，__biz码修改成自己的
+https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MjM5MTc3MDcwNw==#wechat_redirect
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------微擎后台控件
+{php echo tpl_ueditor('content', $activity['content']);}  编辑框
+
+{php echo tpl_form_field_date('starttime', $activity['starttime'], true)}  时间控件
+
+  {php echo tpl_form_field_daterange('yytime',array('starttime'=>date('Y-m-d', $stime),'endtime'=>date('Y-m-d', $etime)))}   时间段控件   
+表现为
+<input name="klidate[start]" type="hidden" value="2017-03-05">
+<input name="klidate[end]" type="hidden" value="2017-03-05">
+					
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+获取单个字段值
+pdo_fetchcolumn
+
+----------------------------------------------------------------
+路径问题
+根目录IA_ROOT
+require_once IA_ROOT.'/addons/lonaking_activity/plugin/phpqrcode.php';
+
+
+--------------------------------------------------------------------------------------------------------------
+----------------时间控件的web页面代码
+<input type="text" value="2012-05-15 21:05" id="datetimepicker">
+
+
+
+<input type='text' name='endtime4[]'  value='' placeholder='请选择日期时间' readonly='readonly' class='datetimepicker form-control' style='padding-left:12px;' />
+
+$('#datetimepicker').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii'
+});
+
+
+
+
+                require(['datetimepicker'], function(){
+
+							$('.datetimepicker').each(function(){
+								var option = {
+									lang : 'zh',
+									step : '10',
+									timepicker : true,closeOnDateSelect : true,
+					format : 'Y-m-d H:i:s'};
+					$(this).datetimepicker(option);	
+						
+					});         
+					});	
+
+
+{php echo date("Y-m-d H:i:s",strtotime($html['activity']['start']));}  php 时间转换
+----------------------------------------------
+时间段，选择时间范围
+	{php echo tpl_form_field_daterange('youxiaodate');}
+
+
+{php echo tpl_form_field_date('youxiaodate',time(),1);}   日期函数，按5分钟的时间选择
+
+
+{php echo tpl_form_field_date("data[start_time]",$data['start_time']);}	 最后参数没有，就是只能选择日期，没有分钟
+
+
+
+--------------------------------------------获取模块的setting，在模块module中设置
+global $_W;
+		$setting=pdo_fetchcolumn("select settings from ".tablename('uni_account_modules')."  where  uniacid={$_W['uniacid']} and  module='ss_zxkm' ");
+		$setting=unserialize($setting);
+                $cfg=$this->module['config'];   //一般用这个，前面和下面等价，下面的是微擎的封装
+
+
+--------------------分页
+ $pindex = max(1, intval($_GPC['page']));
+            $codeset['m'][2] = max(4, intval($codeset['m'][2]));
+            $psize = 10;
+            $condition = '';
+            $params = array();
+            $list = pdo_fetchall('SELECT a.*,b.avatar,b.uid,b.nickname,d.product FROM ' . tablename('zmcn_fw_chai') . ' as a left join ' . tablename('mc_members') . ' as b ON a.userid=b.uid left join ' . tablename('zmcn_fw_batch') . " as d ON a.batchid=d.id  WHERE a.uniacid = '{$_W['uniacid']}' {$condition} ORDER BY a.addtime DESC LIMIT " . ($pindex - 1) * $psize . ',' . $psize, $params);
+            $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename('zmcn_fw_chai') . " WHERE uniacid = '{$_W['uniacid']}' {$condition}", $params);
+            $pager = pagination($total, $pindex, $psize);
+
+-----------------------带搜索参数的分页
+
+ $pindex = max(1, intval($_GPC['page']));
+            $codeset['m'][2] = max(4, intval($codeset['m'][2]));
+            $psize = 10;
+            $condition = '';
+            $params = array();
+            $list = pdo_fetchall('SELECT a.*,b.avatar,b.uid,b.nickname,d.product FROM ' . tablename('zmcn_fw_chai') . ' as a left join ' . tablename('mc_members') . ' as b ON a.userid=b.uid left join ' . tablename('zmcn_fw_batch') . " as d ON a.batchid=d.id  WHERE a.uniacid = '{$_W['uniacid']}' {$condition} ORDER BY a.addtime DESC LIMIT " . ($pindex - 1) * $psize . ',' . $psize, $params);
+            $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename('zmcn_fw_chai') . " WHERE uniacid = '{$_W['uniacid']}' {$condition}", $params);
+            $pager = pagination($total, $pindex, $psize,"c=site&a=entry&foo=display&do=zmfwcaa&m=zmcn_fw&name={$_GPC['name']}&diqu={$_GPC['diqu']}&page=*");
+
+用*来替代page的页数
+
+
+-----------------------------登陆问题
+jssdk 的config  在框架的common里面，有这个函数，默认启动所有的接口;false是不启用debug，true是启动debug
+
+echo register_jssdk(false);
+
+
+------------------微信昵称表情的过滤
+	$val['nickname'] = preg_replace_callback('/[\xf0-\xf7].{3}/', function($r) { return '@E' . base64_encode($r[0]);},$val['nickname']);
+    			
+    			$countt=substr_count($val['nickname'],"@");
+    			for ($i=0; $i < $countt; $i++) {
+    				$c = stripos($val['nickname'],"@");
+    				$val['nickname']=substr($val['nickname'],0,$c).substr($val['nickname'],$c+10,strlen($val['nickname'])-1);
+    			}
+    			$val['nickname'] = preg_replace_callback('/@E(.{6}==)/', function($r) {return base64_decode($r[1]);}, $val['nickname']);
+    	
+--------------------------------
+//判断是否微信pc端登陆
+var isPc = /macintosh|window/.test(navigator.userAgent.toLowerCase());
+
+
+if(!isset($_SESSION)){ session_start();} 
+
+
+
+//视频上传*******************************
+   {php echo tpl_form_field_video('video',$video)}
+
+//web端图片上次
+    {php echo tpl_form_field_image('avatar',$staff['avatar'])}
+
+
+framework/function/file.func.php
+/*if (!in_array(strtolower($ext), $setting['extentions']) || in_array(strtolower($ext), $harmtype)) {
+		return error(-3, '不允许上传此类文件');
+	}*/
+	
+	if ( in_array(strtolower($ext), $harmtype)) {
+		return error(-3, '不允许上传此类文件');
+	}
+
+***********************************************************************************************
+
+北京时间存储的数值比格林时间少了8个小时；   存储的value=格林时间-3600*8；
+
+$min2是存储的时间戳
+ $shijian['value']=date("H:i",$min2);   //这个是对的，用时间戳去获取多少点
+$shijian['cd_time']=$riqi['time']+$min2%86400;   //这是错误的，时间戳直接取余是错误的，因为他不是格林时间，应该转成格林时间再取余
+正确如下  $shijian['cd_time']=$riqi['time']+($min2+8*3600)%86400;  
+
+
+tomedia($src, $local_path = false)
+$src 需要进行转换的路径  
+示例
+echo tomedia('images/noavatar_middle.gif');
+
+*******************************
+alter table `ims_mc_members`  
+add column `isrz` int(11) NULL DEFAULT  0 COMMENT '是否认证',
+add column `islz` int(11) NULL DEFAULT  0 COMMENT '是否离职';
+
+*********************************************************************表单提交
+ <input name="token" type="hidden" value="{$_W['token']}" />     if($_W['ispost'])
+
+
+*******************************************************************************************
+$fan = mc_oauth_userinfo();  微信粉丝数据访问授权  （重要）  //函数会自动添加粉丝和会员，条件是：必须要推出微信，清除session才可以；
+
+*****************************************************************************************************
+echo json_encode("中文", JSON_UNESCAPED_UNICODE);  $("input[name='data']").val();
+
+
+*************************************************自己写的日志函数
+function jack_log($message){
+	
+	// $log_file = 'F:\work\mph\oto.mph88.com\log\a'.date('Ymd',time()).'_all.log';
+	
+	$log_file = date('Ymd',time()).'jack.log';
+	
+	$url = $_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
+
+  $content = "[url:] {$url}  [time:]".date('Y-m-d H:i:s',time())." \r\n  ";
+	
+   $content .=var_export($message,TRUE);
+   $content .= "\r\n\n";
+   file_put_contents($log_file,$content, FILE_APPEND);
+		
+}
+
+
+---------------------------
+$this->module['config']['yuan_equal_scores'];  获取模块下的配置参数
